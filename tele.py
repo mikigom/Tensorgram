@@ -85,6 +85,7 @@ def listen_and_response():
             last_update_id = get_last_update_id(updates) + 1
             tensorboard_listen.open_and_init_driver()
             tensorboard_listen.save_screenshot()
+            tensorboard_listen.close_driver()
             try:
                 if updates["result"][0]["message"]["text"] == "all":
                     for file in os.listdir(os.getcwd() + "/tmp"):
@@ -95,7 +96,6 @@ def listen_and_response():
                     send_return(updates["result"][0]["message"]["text"], updates, updates["result"][0]["message"]["text"])
             except:
                 send_message("Cannot find any matched summary name.", updates["result"][0]["message"]["chat"]["id"])
-            tensorboard_listen.close_driver()
         time.sleep(1)
 
 if __name__ == '__main__':

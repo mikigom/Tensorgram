@@ -38,10 +38,9 @@ def open_and_init_driver():
     time.sleep(0.5)
 
     driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]/iron-collapse').click()
-    time.sleep(0.5)
 
     driver.execute_script("window.scrollTo(0, %s);" % -987654321)
-    time.sleep(0.5)
+    time.sleep(0.1)
 
 def save_screenshot():
     global driver, scalars_n
@@ -55,9 +54,8 @@ def save_screenshot():
     block_y_size = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]').size['height']
     for i in range(2, scalars_n+1):
         driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i) + ']/iron-collapse').click()
-        time.sleep(0.5)
         driver.execute_script("window.scrollTo(0, %s);" % (block_y_size))
-        time.sleep(0.5)
+        time.sleep(0.1)
         img = Image.open(StringIO(driver.get_screenshot_as_png()))
         scalar_location = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i) + ']/iron-collapse/div/div').location
         scalar_size = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i) + ']/iron-collapse/div/div').size
