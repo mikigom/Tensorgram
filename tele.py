@@ -3,11 +3,16 @@ import requests
 import time
 import urllib
 import telegram
+import os
 from urllib import quote
+import requests.packages.urllib3
+
+requests.packages.urllib3.disable_warnings()
 
 TOKEN = "373979783:AAFgtFdIGsF6p-ZNL3fC2siUjKiSXXqmIpU"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 bot = telegram.Bot(token=TOKEN)
+#global last_update_id = None
 
 def get_url(url):
     response = requests.get(url)
@@ -55,7 +60,6 @@ def get_last_chat_id_and_text(updates):
     last_update = num_updates - 1
     text = updates["result"][last_update]["message"]["text"]
     chat_id = updates["result"][last_update]["message"]["chat"]["id"]
-    print(chat_id)
     return (text, chat_id)
 
 
@@ -64,22 +68,29 @@ def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
-def send_return(file_name, updates):
+def send_return(file_name, updates, caption):
     for update in updates["result"]:
-        print("hit!")
         chat = update["message"]["chat"]["id"]
-        sendImage(file_name, chat)
+        sendImage(file_name, chat, caption)
 
-def sendImage(file_name, chat_id, caption):
-    print(bot.sendPhoto(chat_id=chat_id, photo=open("./test.png", "rb"), caption = caption))
+def sendImage(loss_name, chat_id, caption):
+    print(bot.sendPhoto(chat_id=chat_id, photo=open("./tmp/" + str(loss_name) + ".png", "rb"), caption = caption))
 
 def listen_and_response():
+    last_update_id = None
     while True:
-        try:
-            updates = get_updates(last_update_id)
-            if len(updates["result"]) > 0:
+        updates = get_updates(last_update_id)
+        if len(updates["result"]) > 0:
+            last_update_id = get_last_update_id(updates) + 1
+            if updates["result"][0]["message"]["text"] == "all":
+                for file in os.listdir(os.getcwd() + "/tmp"):
+                    file_ = file.rsplit('.', 1)[0]
+                    send_return(file_, updates, file_)
+            else:
                 last_update_id = get_last_update_id(updates) + 1
-                send_return('./test.png', updates, caption)
-            time.sleep(0.5)
-        except:
-            pass
+                send_return(updates["result"][0]["message"]["text"], updates, updates["result"][0]["message"]["text"])
+        time.sleep(1)
+
+if __name__ == '__main__':
+    print("Listen...")
+    listen_and_response()

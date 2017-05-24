@@ -38,7 +38,6 @@ def open_and_init_driver():
 
 def save_screenshot():
     slices = []
-    driver.save_screenshot("screenshot1.png")
     img = Image.open(StringIO(driver.get_screenshot_as_png()))
     first_scalar_location = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]/iron-collapse/div/div').location
     first_scalar_size = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]/iron-collapse/div/div').size
@@ -51,7 +50,6 @@ def save_screenshot():
         time.sleep(0.5)
         driver.execute_script("window.scrollTo(0, %s);" % (block_y_size))
         time.sleep(0.5)
-        driver.save_screenshot("screenshot" + str(i) + ".png")
         img = Image.open(StringIO(driver.get_screenshot_as_png()))
         scalar_location = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i) + ']/iron-collapse/div/div').location
         scalar_size = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i) + ']/iron-collapse/div/div').size
@@ -59,7 +57,8 @@ def save_screenshot():
         slices.append(img)
 
     for i in range(0, scalars_n):
-        slices[i].save('./' + str(i) + '.png')
+        sum_name = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i + 1) + ']/button/span[1]').text
+        slices[i].save('./tmp/' + str(i) + '.png')
 
 def merge_screenshot(slices):
     first_size = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]/iron-collapse/div/div').size
