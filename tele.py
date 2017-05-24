@@ -6,6 +6,7 @@ import telegram
 import os
 from urllib import quote
 import requests.packages.urllib3
+import tensorboard_listen
 
 requests.packages.urllib3.disable_warnings()
 
@@ -82,13 +83,19 @@ def listen_and_response():
         updates = get_updates(last_update_id)
         if len(updates["result"]) > 0:
             last_update_id = get_last_update_id(updates) + 1
-            if updates["result"][0]["message"]["text"] == "all":
-                for file in os.listdir(os.getcwd() + "/tmp"):
-                    file_ = file.rsplit('.', 1)[0]
-                    send_return(file_, updates, file_)
-            else:
-                last_update_id = get_last_update_id(updates) + 1
-                send_return(updates["result"][0]["message"]["text"], updates, updates["result"][0]["message"]["text"])
+            tensorboard_listen.open_and_init_driver()
+            tensorboard_listen.save_screenshot()
+            try:
+                if updates["result"][0]["message"]["text"] == "all":
+                    for file in os.listdir(os.getcwd() + "/tmp"):
+                        file_ = file.rsplit('.', 1)[0]
+                        send_return(file_, updates, file_)
+                else:
+                    last_update_id = get_last_update_id(updates) + 1
+                    send_return(updates["result"][0]["message"]["text"], updates, updates["result"][0]["message"]["text"])
+            except:
+                send_message("Cannot find any matched summary name.", updates["result"][0]["message"]["chat"]["id"])
+            tensorboard_listen.close_driver()
         time.sleep(1)
 
 if __name__ == '__main__':

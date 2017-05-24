@@ -6,11 +6,18 @@ from cStringIO import StringIO
 binary = './chromedriver'
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
-driver = webdriver.Chrome(binary, chrome_options=options)
-driver.get('http://127.0.1.1:6006/')
+global driver
+global scalars_n
+
+def close_driver():
+    global driver
+    driver.close()
 
 def open_and_init_driver():
-    time.sleep(1)
+    global driver, scalars_n
+    driver = webdriver.Chrome(binary, chrome_options=options)
+    driver.get('http://127.0.1.1:6006/')
+    time.sleep(0.5)
 
     scalars_n = 1
     while(1):
@@ -37,6 +44,7 @@ def open_and_init_driver():
     time.sleep(0.5)
 
 def save_screenshot():
+    global driver, scalars_n
     slices = []
     img = Image.open(StringIO(driver.get_screenshot_as_png()))
     first_scalar_location = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]/iron-collapse/div/div').location
@@ -58,7 +66,7 @@ def save_screenshot():
 
     for i in range(0, scalars_n):
         sum_name = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[' + str(i + 1) + ']/button/span[1]').text
-        slices[i].save('./tmp/' + str(i) + '.png')
+        slices[i].save('./tmp/' + sum_name + '.png')
 
 def merge_screenshot(slices):
     first_size = driver.find_element_by_xpath('//*[@id="center"]/div/tf-panes-helper/tf-collapsable-pane[1]/iron-collapse/div/div').size
