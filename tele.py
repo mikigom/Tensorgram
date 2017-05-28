@@ -83,9 +83,9 @@ def listen_and_response():
         updates = get_updates(last_update_id)
         if len(updates["result"]) > 0:
             last_update_id = get_last_update_id(updates) + 1
-            tensorboard_listen.open_and_init_driver()
-            tensorboard_listen.save_screenshot()
-            tensorboard_listen.close_driver()
+            driver = tensorboard_listen.Driver()
+            driver.save_screenshot()
+            driver.close_driver()
             try:
                 if updates["result"][0]["message"]["text"] == "all":
                     for file in os.listdir(os.getcwd() + "/tmp"):
