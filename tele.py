@@ -10,7 +10,7 @@ import tensorboard_listen
 
 requests.packages.urllib3.disable_warnings()
 
-TOKEN = "373979783:AAFgtFdIGsF6p-ZNL3fC2siUjKiSXXqmIpU"
+TOKEN = "xxxxxxxxxxxxxxxxxxxxxx"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 bot = telegram.Bot(token=TOKEN)
 #global last_update_id = None

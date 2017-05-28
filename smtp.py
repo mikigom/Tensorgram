@@ -10,10 +10,10 @@ from email import Utils
 from email.header import Header  
 import os
 
-smtp_server  = r"smtp.gmail.com"  
+smtp_server  = r"smtp.gmail.com"
 port = 587  
-userid = r"s3213403@gmail.com"  
-passwd = r"z19pnoz19pno"
+userid = r"xxxxxxxxxxxxx"
+passwd = r"xxxxxxxxxxxx"
 
 def send_mail(from_user, to_user, cc_users, subject, text, attach):  
         COMMASPACE = ", "
